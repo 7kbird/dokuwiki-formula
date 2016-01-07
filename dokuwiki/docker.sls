@@ -1,4 +1,5 @@
 {% import_yaml "dokuwiki/defaults.yaml" as defaults %}
+{% from "dokuwiki/docker-env.jinja" import envs with context %}
 
 {% set images = [] %}
 {% for docker_name in salt['pillar.get']('dokuwiki:dockers', {}) %}
@@ -17,6 +18,8 @@ dokuwiki-docker_{{ docker_name }}_running:
       - {{ docker.docker_http_port }}
     - require:
       - cmd: dokuwiki-docker-image_{{ docker_image }}
+    - environment:
+      {{ envs(docker)|indent(6)}}
 
 dockuwiki-docker_{{ docker_name }}_volume:
   file.directory:

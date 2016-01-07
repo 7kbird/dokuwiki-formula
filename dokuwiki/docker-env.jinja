@@ -1,0 +1,18 @@
+# vim: sts=2 ts=2 sw=2 et ai
+{% macro env_line(item, key, envname) -%}
+{% if key in item -%}
+- {{ envname }}: '{{ item.get(key) }}'
+{% endif -%}
+{% endmacro %}
+
+{% macro envs(docker) -%}
+{{ env_line(docker, 'domain', 'DOKUWIKI_DOMAIN') }}
+{{ env_line(docker, 'userewrite', 'DOKUWIKI_USEREWRITE') }}
+{% if 'smtp' in docker -%}
+{{ env_line(docker.smtp, 'host', 'DOKUWIKI_SMTP_HOST') }}
+{{ env_line(docker.smtp, 'port', 'DOKUWIKI_SMTP_PORT') }}
+{{ env_line(docker.smtp, 'ssl', 'DOKUWIKI_SMTP_SSL') }}
+{{ env_line(docker.smtp, 'user', 'DOKUWIKI_SMTP_USER') }}
+{{ env_line(docker.smtp, 'pass', 'DOKUWIKI_SMTP_PASS') }}
+{% endif %}
+{% endmacro %}
